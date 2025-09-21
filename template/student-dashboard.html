@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px 0;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 0 20px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #3498db;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-header h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu li {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        .sidebar-menu li i {
+            margin-right: 12px;
+            width: 20px;
+        }
+
+        .sidebar-menu li:hover {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu li.active {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 300;
+        }
+
+        .header .date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card.student-profile {
+            grid-column: span 1;
+        }
+
+        .card.exam-info {
+            grid-column: span 1;
+        }
+
+        .card.attendance-card {
+            grid-column: span 2;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .profile-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-item i {
+            width: 20px;
+            color: #3498db;
+            margin-right: 10px;
+        }
+
+        .profile-item span {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .profile-item small {
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+
+        .attendance-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+        }
+
+        .circle-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#e74c3c 0deg, #e74c3c 252deg, #ecf0f1 252deg, #ecf0f1 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-inner {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .attendance-percent {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .attendance-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .exam-details {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .exam-details h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .exam-date {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .exam-countdown {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quick-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card.attendance-card {
+                grid-column: span 1;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://via.placeholder.com/60" alt="Profile">
+            <h3>John Doe</h3>
+            <p>Class XII - Science</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li onclick="showSection('home')" class="active">
+                <i class="fas fa-home"></i> Home
+            </li>
+            <li onclick="showSection('notes')">
+                <i class="fas fa-book"></i> Notes
+            </li>
+            <li onclick="showSection('exam')">
+                <i class="fas fa-clipboard-list"></i> Exam
+            </li>
+            <li onclick="showSection('progress')">
+                <i class="fas fa-chart-line"></i> Progress
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>Dashboard</h1>
+                <div class="date">Saturday, September 21, 2025</div>
+            </div>
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <span class="stat-number">95%</span>
+                    <span class="stat-label">Overall Grade</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">28/30</span>
+                    <span class="stat-label">Classes Attended</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Section -->
+        <div id="home" class="content-section active">
+            <div class="content-grid">
+                <div class="card student-profile">
+                    <h2><i class="fas fa-user"></i>Student Profile</h2>
+                    <div class="profile-info">
+                        <div class="profile-item">
+                            <i class="fas fa-user"></i>
+                            <span>Name: <strong>John Doe</strong></span>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-id-card"></i>
+                            <span>Roll No: <strong>12345</strong></span>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Father's Name: <strong>Robert Doe</strong></span>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-phone"></i>
+                            <span>Contact: <strong>+91 98765 43210</strong></span>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-envelope"></i>
+                            <small>john.doe@email.com</small>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <small>DOB: 15/03/2007</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card exam-info">
+                    <div class="exam-details">
+                        <h3><i class="fas fa-trophy"></i> Next Exam</h3>
+                        <div class="exam-date">Mathematics & MCQ</div>
+                        <div class="exam-countdown">
+                            📅 <strong>October 1, 2025</strong> (10 days left)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card attendance-card">
+                    <h2><i class="fas fa-chart-pie"></i>Attendance Overview</h2>
+                    <div class="attendance-circle">
+                        <div class="circle-bg">
+                            <div class="circle-inner">
+                                <div class="attendance-percent">84%</div>
+                                <div class="attendance-label">Overall</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #7f8c8d; margin-top: 15px;">
+                        Excellent attendance record! Keep up the good work.
+                    </p>
+                    <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold; color: #27ae60;">28</div>
+                            <div style="font-size: 12px; color: #7f8c8d;">Present</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold; color: #e74c3c;">5</div>
+                            <div style="font-size: 12px; color: #7f8c8d;">Absent</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold; color: #f39c12;">33</div>
+                            <div style="font-size: 12px; color: #7f8c8d;">Total</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div id="notes" class="content-section">
+            <div class="card">
+                <h2><i class="fas fa-book"></i>Study Notes</h2>
+                <p>📚 Your organized notes and study materials will appear here. Download PDFs, view lecture recordings, and access important documents.</p>
+                <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #3498db;">
+                    <h4><i class="fas fa-star"></i> Quick Tip</h4>
+                    <p>Organize your notes by subject and topic for better revision. Use highlighters and sticky notes for important formulas!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Section -->
+        <div id="exam" class="content-section">
+            <div class="card">
+                <h2><i class="fas fa-clipboard-list"></i>Exam Schedule</h2>
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
+                    <h3>📅 Next Examination</h3>
+                    <div style="font-size: 22px; margin: 10px 0;">Mathematics and MCQ</div>
+                    <div style="font-size: 16px; opacity: 0.9;">October 1, 2025 | 9:00 AM - 12:00 PM</div>
+                    <div style="font-size: 14px; margin-top: 10px;">⏰ 10 days remaining</div>
+                </div>
+                <h4 style="margin: 25px 0 15px 0; color: #2c3e50;">Exam Preparation Tips:</h4>
+                <ul style="color: #7f8c8d; line-height: 1.8;">
+                    <li><i class="fas fa-check" style="color: #27ae60; margin-right: 8px;"></i>Practice previous year papers</li>
+                    <li><i class="fas fa-check" style="color: #27ae60; margin-right: 8px;"></i>Focus on important formulas</li>
+                    <li><i class="fas fa-check" style="color: #27ae60; margin-right: 8px;"></i>Revise MCQ patterns</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progress" class="content-section">
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i>Academic Progress</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #3498db;">92%</div>
+                        <div style="color: #7f8c8d; font-size: 14px;">Mathematics</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #27ae60;">88%</div>
+                        <div style="color: #7f8c8d; font-size: 14px;">Physics</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                        <div style="font-size: 32px; font-weight: bold; color: #e67e22;">85%</div>
+                        <div style="color: #7f8c8d; font-size: 14px;">Chemistry</div>
+                    </div>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;"><i class="fas fa-star"></i> Achievement Unlocked!</h4>
+                    <p style="color: #7f8c8d;">🎉 Congratulations! You've maintained 90%+ attendance for 3 consecutive months. Keep up the excellent work!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Update active menu item
+            document.querySelectorAll('.sidebar-menu li').forEach(li => {
+                li.classList.remove('active');
+            });
+            event.target.closest('li').classList.add('active');
+            
+            // Show selected section
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Add smooth scrolling for main content
+        document.querySelector('.main-content').addEventListener('scroll', function() {
+            this.style.overflowY = 'auto';
+        });
+
+        // Dynamic date
+        document.querySelector('.date').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+</body>
+</html>

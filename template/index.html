@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <title>Campus Dashboard</title>
+  <link rel="stylesheet" href=/static/style.css">
 </head>
 <body>
   <nav>
@@ -18,12 +17,10 @@
   </nav>
 
   <section class="hero">
-    <h2>"Admin Control Panel - Secure Login"</h2>
-    <div class="login-container">
-      <h2>Admin Login</h2>
-      <input type="email" placeholder="Enter Email" required>
-      <input type="password" placeholder="Enter Password" required>
-      <button onclick="loginUser('Admin')">Login</button>
+    <h2>"Your Entire Campus In One Dashboard"</h2>
+    <div class="buttons">
+      <button onclick="window.location.href='student-login.html'">Student</button>
+      <button onclick="window.location.href='admin-login.html'">Admin</button>
     </div>
   </section>
 </body>
