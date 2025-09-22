@@ -6,3 +6,11 @@ import datetime
 import csv
 import io
 
+# Database connection 
+def connect_db():
+    return mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='',
+        database='testdb'
+    )
